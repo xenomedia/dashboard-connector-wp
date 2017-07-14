@@ -1,0 +1,8 @@
+*.tmp
+*.log
+*.sql
+*.gzip
+*.zip
+*.
+node_modules*
+test*

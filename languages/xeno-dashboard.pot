@@ -1,0 +1,125 @@
+# Copyright (C) 2017 Xeno Staff <carolina@xenomedia.com>
+# This file is distributed under the same license as the Xeno Dashboard package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Xeno Dashboard 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/xeno-dashboard\n"
+"POT-Creation-Date: 2017-07-14 03:55:23+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: grunt-wp-i18n 0.5.4\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
+"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Country: United States\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-Bookmarks: \n"
+"X-Textdomain-Support: yes\n"
+
+#: includes/admin.php:119
+msgid "Xeno Dasboard"
+msgstr ""
+
+#: includes/admin.php:136
+msgid "Xeno dashboard"
+msgstr ""
+
+#: includes/admin.php:139
+msgid "Slack"
+msgstr ""
+
+#: includes/admin.php:142
+msgid "Jira"
+msgstr ""
+
+#: includes/admin.php:255 includes/admin.php:259
+msgid "Sorry, your nonce did not verify."
+msgstr ""
+
+#: includes/admin.php:264
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Xeno Dashboard"
+msgstr ""
+
+#: includes/jira.php:261
+msgid "Error: The payload did not send to Jira"
+msgstr ""
+
+#: includes/rest.php:180
+msgid "I am slack and I talk"
+msgstr ""
+
+#: includes/rest.php:266 includes/rest.php:283
+msgid "Invalid token."
+msgstr ""
+
+#: includes/rest.php:293
+msgid "Something went terribly wrong."
+msgstr ""
+
+#: includes/slack.php:69
+msgid "Xeno dashboard needs to be configurated!"
+msgstr ""
+
+#: includes/slack.php:223
+msgid "Error: The payload did not send to Slack"
+msgstr ""
+
+#: includes/updates.php:67
+msgid "Core"
+msgstr ""
+
+#: includes/updates.php:68
+msgid "WP"
+msgstr ""
+
+#: includes/updates.php:74 includes/updates.php:158 includes/updates.php:222
+msgid "alert"
+msgstr ""
+
+#: includes/updates.php:74 includes/updates.php:158 includes/updates.php:222
+msgid "notice"
+msgstr ""
+
+#: includes/updates.php:75
+msgid "Not current ( %1$s => %2$s )"
+msgstr ""
+
+#: includes/updates.php:82 includes/updates.php:138 includes/updates.php:207
+msgid "Up to date %1$s"
+msgstr ""
+
+#: includes/updates.php:139 includes/updates.php:208
+msgid "info"
+msgstr ""
+
+#: includes/updates.php:159 includes/updates.php:223
+msgid "Not current (%1$s => %2$s)"
+msgstr ""
+
+#: includes/updates.php:339
+msgid "Error: Couldn't connect to wpvulndb"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "xeno-dashboard"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Xeno Staff <carolina@xenomedia.com>"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "Xeno Staff"
+msgstr ""
