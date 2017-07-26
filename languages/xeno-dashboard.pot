@@ -89,7 +89,7 @@ msgid "alert"
 msgstr ""
 
 #: includes/updates.php:74 includes/updates.php:158 includes/updates.php:222
-msgid "notice"
+msgid "warning"
 msgstr ""
 
 #: includes/updates.php:75
@@ -101,7 +101,7 @@ msgid "Up to date %1$s"
 msgstr ""
 
 #: includes/updates.php:139 includes/updates.php:208
-msgid "info"
+msgid "notice"
 msgstr ""
 
 #: includes/updates.php:159 includes/updates.php:223

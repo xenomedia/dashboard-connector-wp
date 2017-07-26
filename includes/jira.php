@@ -40,19 +40,19 @@ class Xeno_Dashboard_Jira {
 	 *
 	 * Set class variables.
 	 * @param void
-	 * @return void	 
+	 * @return void
 	 * @access  public
 	 */
 	public function __construct() {
-		
+
 		// Jira transition ID for Start Progress, default 4.
 		$transition = xdb_get_settings( $setting = 'j_trans', $defined = 'XDB_JIRA_TRANSITION');
 
 		$this->settings = array(
-			'enable' => ! empty( $user ),	
-			'progress_transition_id' => empty($transition) ? 4 : $transition, 
+			'enable' => ! empty( $user ),
+			'progress_transition_id' => empty($transition) ? 4 : $transition,
 			'user' => xdb_get_settings( $setting = 'j_user', $defined = 'XDB_JIRA_USER'),
-			'pwd' => xdb_get_settings( $setting = 'j_pwd', $defined = 'XDB_JIRA_PWD'), 
+			'pwd' => xdb_get_settings( $setting = 'j_pwd', $defined = 'XDB_JIRA_PWD'),
 			'assignee' => xdb_get_settings( $setting = 'j_assign', $defined = 'XDB_JIRA_ASSIGNEE'),
 			'server' => xdb_get_settings( $setting = 'j_server', $defined = 'XDB_JIRA_SERVER'),
 			'project' => xdb_get_settings( $setting = 'j_proj', $defined = 'XDB_JIRA_PROJECT'),
@@ -130,7 +130,7 @@ class Xeno_Dashboard_Jira {
 
 					$this->description .= $d['type'] . "\tName: " . $d['name'] . ",\t" . $d['description'] . "\n";
 
-					if ( 'notice' == $d['alert_level'] && $vulnerable ) {
+					if ( 'warning' == $d['alert_level'] && $vulnerable ) {
 						$vulnerable = true;
 					}
 				}
@@ -148,14 +148,14 @@ class Xeno_Dashboard_Jira {
 	 * @return  string clean body content
 	 */
 	private function clean_transiten( $string ) {
-		return crypt( 
-			json_encode( 
+		return crypt(
+			json_encode(
 				str_replace(
 					array( "\r\n", "\n", "\r", "\t", 'plugin', 'theme', 'core' ),
-					'', 
-					$string ) 
-				), 
-			'rl' 
+					'',
+					$string )
+				),
+			'rl'
 		);
 	}
 
@@ -192,10 +192,10 @@ class Xeno_Dashboard_Jira {
 		// Verify if there are vulnerabilities.
 		$data = array(
 			'fields' => array(
-				'priority' => array( 
+				'priority' => array(
 					'id' => ( true === $vulnerable ) ? '1' : '3',
 				),
-				'assignee' => array( 
+				'assignee' => array(
 					'name' => ( isset( $this->settings['assignee'] ) ? $this->settings['assignee'] : 'admin' ),
 				),
 				'project' => array(
