@@ -1,25 +1,25 @@
-<?php 
+<?php
 /**
  * Custom REST API end point for Xeno Dashboard.
  *
- * @package  Xeno_Dashboard
+ * @package xeno_dashboard
  *
- * @since   1.0.0
+ * @since 1.0.0
  */
 
 // If this file is called directly, abort.
 if ( ! defined( 'ABSPATH' ) ) {
-  die;
+	die;
 }
 
-function create_Xeno_Dasboard_REST_Controller(){
+function create_Xeno_Dasboard_REST_Controller() {
 	new Xeno_Dasboard_REST_Controller();
 }
 add_action( 'init', 'create_Xeno_Dasboard_REST_Controller' );
 
 /**
  * Class for handling Links in the REST API.
- * 
+ *
  * @since 1.0.0
  */
 class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
@@ -30,12 +30,12 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	protected $settings;
 
 	/**
-	* Holds the namespace for these routes.
-	*
-	* @var string
-	* @access  private
-	* @since   1.0.0
-	*/
+	 * Holds the namespace for these routes.
+	 *
+	 * @var string
+	 * @access  private
+	 * @since   1.0.0
+	 */
 	protected $namespace = 'wp/v2';
 
 	/**
@@ -45,7 +45,7 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return void
 	 *
-	 * @access  public 
+	 * @access  public
 	 */
 	public function __construct() {
 		$this->init_settings();
@@ -59,16 +59,16 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return void
 	 *
-	 * @access  public 
+	 * @access  public
 	 */
 	public function init_settings() {
 		$this->settings = array(
-			'client_id' => xdb_get_settings( $setting = 'r_client_id', $defined = 'XDB_CLIENT_ID'),
-			'site_id' => xdb_get_settings( $setting = 'r_site_id', $defined = 'XDB_SITE_ID'),
-			'url' => xdb_get_settings( $setting = 'r_url', $defined = 'XDB_URL'),
-			'env' => xdb_get_settings( $setting = 'r_env', $defined = 'XDB_ENV'),
-			'username' => xdb_get_settings( $setting = 'r_user', $defined = 'XDB_USER'),
-			'pwd' => xdb_get_settings( $setting = 'r_pwd', $defined = 'XDB_PWD'),
+			'client_id' => xdb_get_settings( $setting = 'r_client_id', $defined = 'XDB_CLIENT_ID' ),
+			'site_id' => xdb_get_settings( $setting = 'r_site_id', $defined = 'XDB_SITE_ID' ),
+			'url' => xdb_get_settings( $setting = 'r_url', $defined = 'XDB_URL' ),
+			'env' => xdb_get_settings( $setting = 'r_env', $defined = 'XDB_ENV' ),
+			'username' => xdb_get_settings( $setting = 'r_user', $defined = 'XDB_USER' ),
+			'pwd' => xdb_get_settings( $setting = 'r_pwd', $defined = 'XDB_PWD' ),
 		);
 	}
 
@@ -79,19 +79,17 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return void
 	 *
-	 * @access  public 
+	 * @access  public
 	 */
 	public function init_hooks() {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
-		add_action( 'xdb_rest_notify_dashboard', array( $this, 'rest_notify_dashboard') );
-		
+		add_action( 'xdb_rest_notify_dashboard', array( $this, 'rest_notify_dashboard' ) );
 
 		// Cron to post in Xeno dashboard.
-		if( ! wp_next_scheduled( 'xdb_rest_notify_dashboard' ) ) {
-	        wp_schedule_event( time(), 'twicedaily', 'xdb_rest_notify_dashboard' );
-	    }
+		if ( ! wp_next_scheduled( 'xdb_rest_notify_dashboard' ) ) {
+			wp_schedule_event( time(), 'twicedaily', 'xdb_rest_notify_dashboard' );
+		}
 
-	    
 	}
 
 	/**
@@ -103,13 +101,13 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 */
 	public function rest_notify_dashboard() {
 
-		$env = xdb_get_settings( $setting = 'r_env', $defined = 'XDB_ENV');
+		$env = xdb_get_settings( $setting = 'r_env', $defined = 'XDB_ENV' );
 
-		// Verify if production
+		// Verify if production.
 		if ( 'prod' != $env ) {
 			return false;
 		}
-		
+
 		$this->post_to_xeno();
 
 		sendTestEmail( $msg = 'Jira for ' . $this->settings['site_id'] ); // TODO: REMOVE AFTER PLUGIN IS TESTED AND ACTIVE.
@@ -122,27 +120,31 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return void
 	 *
-	 * @access  public 
+	 * @access  public
 	 */
 	public function register_routes() {
 
 		// Register the updates check endpoint.
-		register_rest_route( $this->namespace, '/site-info', array(
-			array(
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_site_info' ),
-				'permission_callback' => array( $this, 'permissions_check' ),
-			),
-		));
+		register_rest_route(
+			$this->namespace, '/site-info', array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_site_info' ),
+					'permission_callback' => array( $this, 'permissions_check' ),
+				),
+			)
+		);
 
 		// Register the updates check endpoint.
-		register_rest_route( $this->namespace, '/slack-talk', array(
-			array(
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_slack_talk' ),
-				'permission_callback' => array( $this, 'permissions_check' ),
-			),
-		));
+		register_rest_route(
+			$this->namespace, '/slack-talk', array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_slack_talk' ),
+					'permission_callback' => array( $this, 'permissions_check' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -152,10 +154,10 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return WP_Error or WP_REST_Response
 	 *
-	 * @access  public 	 
+	 * @access  public
 	 */
 	public function get_slack_talk( $request ) {
-		
+
 		$list_types = array(
 			'core',
 			'plugins',
@@ -165,7 +167,7 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 		// Gets $_GET parameter.
 		// t can be core, plugins or themes, if not then all.
 		$type = $request->get_param( 't' );
-		$type = in_array( $type, $list_types ) ? $type : NULL;
+		$type = in_array( $type, $list_types ) ? $type : null;
 
 		// If all doestn exists will return only the updates.
 		$all = $request->get_param( 'all' );
@@ -193,11 +195,11 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return array $data site information.
 	 *
-	 * @access  private 	 
+	 * @access  private
 	 */
 	private function prepare_data() {
 		// Data arrays holds all the theme, plugin and core information.
-		$data = array();		
+		$data = array();
 
 		// Class Xeno_Dashboard_Updates.
 		require_once plugin_dir_path( __FILE__ ) . 'updates.php';
@@ -207,7 +209,7 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 		// Core.
 		$Xeno_Dashboard_Updates->prepare_core_response( $data );
 
-		// Plugins
+		// Plugins.
 		$Xeno_Dashboard_Updates->prepare_plugins_response( $data );
 
 		// Themes.
@@ -232,7 +234,7 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return WP_Error or WP_REST_Response
 	 *
-	 * @access  public 	 
+	 * @access  public
 	 */
 	public function get_site_info( $request ) {
 
@@ -251,7 +253,7 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return WP_Error or bool
 	 *
-	 * @access  public 	 
+	 * @access  public
 	 */
 	public function permissions_check( $request ) {
 
@@ -259,16 +261,18 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 		$recieved_jwt = $request->get_param( 'token' );
 
 		if ( empty( $recieved_jwt ) ) {
-			
+
 			// Empty token.
 			return new WP_Error(
 				'forbidden_context',
 				__( 'Invalid token.', 'xdb' ),
-				array( 'status' => 403 )
+				array(
+					'status' => 403,
+				)
 			);
 		}
 
-		if ( function_exists( 'xdb_check_supertoken') ) {
+		if ( function_exists( 'xdb_check_supertoken' ) ) {
 
 			// In case a plus symbol is received in the url.
 			$recieved_jwt = urlencode( $recieved_jwt );
@@ -281,26 +285,29 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 				return new WP_Error(
 					'forbidden_context',
 					__( 'Invalid token.', 'xdb' ),
-					array( 'status' => 403 )
+					array(
+						'status' => 403,
+					)
 				);
 			}
-
 		} else {
 
 			// In case there is not a way to check for the super token.
 			return new WP_Error(
-					'forbidden_context',
-					__( 'Something went terribly wrong.', 'xdb' ),
-					array( 'status' => 503 )
-				);
+				'forbidden_context',
+				__( 'Something went terribly wrong.', 'xdb' ),
+				array(
+					'status' => 503,
+				)
+			);
 		}
 
 		return true;
 	}
 
 	/**
-	 * cURL function to talk to Xeno Dashboard in Drupal
-	 * TODO conver to wp.
+	 * The cURL function to talk to Xeno Dashboard in Drupal.
+	 * TODO convert to wp.
 	 *
 	 * @param $url string - jira rest api.
 	 * @param $data json - string with fields.
@@ -309,24 +316,24 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 */
 	public function post_to_xeno() {
 		$data = $this->prepare_data();
-                                                                                
-		$ch = curl_init();
+
+																						$ch = curl_init();
 		curl_setopt( $ch, CURLOPT_POST, 1 );
 		curl_setopt( $ch, CURLOPT_URL, $this->settings['url'] );
-		curl_setopt( $ch, CURLOPT_USERPWD, $this->settings['username'] . ":" . $this->settings['pwd'] );
-		curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode($data) );
+		curl_setopt( $ch, CURLOPT_USERPWD, $this->settings['username'] . ':' . $this->settings['pwd'] );
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $data ) );
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, array( 'Content-type: application/json' ) );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, TRUE );
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE ); // for old versions. TODO: verify ssl
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false ); // For old versions. TODO: verify ssl.
 
 		$result = curl_exec( $ch );
 		$ch_error = curl_error( $ch );
 		if ( $ch_error ) {
-			//echo sprintf( 'cURL Error: %s', $ch_error );
+			// echo sprintf( 'cURL Error: %s', $ch_error );
 			return false;
 		}
 		curl_close( $ch );
-		//echo "\n" . $result;
+		// echo "\n" . $result;
 	}
 
 }
@@ -338,7 +345,7 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
  * @return void
  */
 function xdb_run_dashboard_on_activate() {
-    do_action( 'xdb_rest_notify_dashboard' );
+	do_action( 'xdb_rest_notify_dashboard' );
 }
 register_activation_hook( __FILE__, 'xdb_run_dashboard_on_activate' );
 
@@ -350,6 +357,6 @@ register_activation_hook( __FILE__, 'xdb_run_dashboard_on_activate' );
  * @return void
  */
 function xdb_run_on_deactivate() {
-    wp_clear_scheduled_hook( 'xdb_rest_notify_dashboard' );
+	wp_clear_scheduled_hook( 'xdb_rest_notify_dashboard' );
 }
 register_deactivation_hook( __FILE__, 'xdb_run_on_deactivate' );

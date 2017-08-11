@@ -2,12 +2,14 @@
 /**
  * Comunicates with Slack.
  *
+ * @package xeno_dashboard
+ *
  * @since 1.0.0
  */
 
 // If this file is called directly, abort.
 if ( ! defined( 'ABSPATH' ) ) {
-  die;
+	die;
 }
 
 /**
@@ -39,18 +41,18 @@ class Xeno_Dashboard_Slack {
 	 * @since   1.0.0
 	 */
 	public function __construct() {
-		
-		// Slack Webhook
-		$setting_webhook = xdb_get_settings( $setting = 's_webhook', $defined = 'XDB_SLACK_WEBHOOK');
+
+		// Slack Webhook.
+		$setting_webhook = xdb_get_settings( $setting = 's_webhook', $defined = 'XDB_SLACK_WEBHOOK' );
 
 		// Slack connections.
 		$this->settings = array(
 			'enable' => ! empty( $setting_webhook ),
 			'end_point' => SLACK_WH . $setting_webhook,
-			'bot_name' => __('Xeno Dashboard', 'xdb'),
+			'bot_name' => __( 'Xeno Dashboard', 'xdb' ),
 			'bot_icon' => '',
-			'channels' => xdb_get_settings( $setting = 's_channels', $defined = 'XDB_SLACK_CHANNELS'),
-			'notify' => xdb_get_settings( $setting = 's_notify', $defined = 'XDB_SLACK_NOTIFY'),
+			'channels' => xdb_get_settings( $setting = 's_channels', $defined = 'XDB_SLACK_CHANNELS' ),
+			'notify' => xdb_get_settings( $setting = 's_notify', $defined = 'XDB_SLACK_NOTIFY' ),
 		);
 	}
 
@@ -64,11 +66,11 @@ class Xeno_Dashboard_Slack {
 	 * @access   public
 	 */
 	public function xdb_admin_notice() {
-	    ?>
-	    <div class="notice error my-acf-notice is-dismissible" >
-	        <p><?php _e( 'Xeno dashboard needs to be configurated!', 'xdb' ); ?></p>
-	    </div>
-	    <?php
+		?>
+		<div class="notice error my-acf-notice is-dismissible" >
+			<p><?php _e( 'Xeno dashboard needs to be configurated!', 'xdb' ); ?></p>
+		</div>
+		<?php
 	}
 
 	/**
@@ -90,33 +92,32 @@ class Xeno_Dashboard_Slack {
 		$Xeno_Dashboard_Updates = new Xeno_Dashboard_Updates();
 
 		// Core.
-		if ( empty( $type ) ||  'all' == $type || 'core' == $type ) {
+		if ( empty( $type ) || 'all' == $type || 'core' == $type ) {
 			$Xeno_Dashboard_Updates->prepare_core_response( $data );
 		}
 
-		// Plugins
-		if ( empty( $type ) ||  'all' == $type || 'plugins' == $type ) {
+		// Plugins.
+		if ( empty( $type ) || 'all' == $type || 'plugins' == $type ) {
 			$Xeno_Dashboard_Updates->prepare_plugins_response( $data );
 		}
 
 		// Themes.
-		if ( empty( $type ) ||  'all' == $type || 'themes' == $type ) {
+		if ( empty( $type ) || 'all' == $type || 'themes' == $type ) {
 			$Xeno_Dashboard_Updates->prepare_themes_response( $data );
 		}
 
 		$vulnerable = false;
 		// Build fields.
-
 		$the_fields = array();
 
 		if ( ! empty( $data ) ) {
 
 			// Setup each attachment.
 			foreach ( $data as $attachments => $attachment ) {
-				if ( true === $updates_only && false !== strpos( strtolower( $attachment['description'] ), "up to date" ) ) {
-					unset($attachment);
+				if ( true === $updates_only && false !== strpos( strtolower( $attachment['description'] ), 'up to date' ) ) {
+					unset( $attachment );
 				} else {
-					
+
 					$field = array(
 						'title' => $attachment['name'],
 						'value' => $attachment['description'],
@@ -161,8 +162,8 @@ class Xeno_Dashboard_Slack {
 			'channel'       => 'jenkins-ci',
 			'username'      => get_bloginfo( 'name' ),
 			'text'          => sprintf( '*<%1$s|%2$s>*' . "\n" . '%3$s', get_bloginfo( 'url' ), get_bloginfo( 'name' ), 'Xeno vulnerabilities tests' ),
-			'icon_emoji'	=> ( $vulnerable ) ? ':fire': ':mega:',
-			'icon_url'		=> trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) ) . 'assets/images/xeno.png',
+			'icon_emoji'    => ( $vulnerable ) ? ':fire' : ':mega:',
+			'icon_url'      => trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) ) . 'assets/images/xeno.png',
 			'attachments'   => array(),
 		);
 
@@ -174,11 +175,11 @@ class Xeno_Dashboard_Slack {
 		);
 
 		$payload['attachments'][] = array(
-			'color'         => ( $vulnerable ) ? '#d52121': '#21759b', // Default color.
+			'color'         => ( $vulnerable ) ? '#d52121' : '#21759b', // Default color.
 			'fields'        => $the_fields,
 		);
 
-		// Channels
+		// Channels.
 		$channels = $this->settings['channels'];
 
 		// Make sure its an array.
@@ -201,13 +202,15 @@ class Xeno_Dashboard_Slack {
 			$payload['channel'] = $channel;
 
 			// Send to Slack.
-			$slack_response = wp_remote_post( $webhook_url, array(
-				'sslverify' => false, // for old versions.
+			$slack_response = wp_remote_post(
+				$webhook_url, array(
+					'sslverify' => false, // for old versions.
 				'body'      => json_encode( $payload ),
 				'headers'   => array(
 					'Content-Type' => 'application/json',
-				),
-			));
+				 ),
+				)
+			);
 
 			// Handle errors.
 			if ( is_wp_error( $slack_response ) ) {

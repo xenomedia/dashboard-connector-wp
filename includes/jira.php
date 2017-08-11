@@ -2,7 +2,7 @@
 /**
  * Custom Jira API end point for Xeno Dashboard.
  *
- * @package  Xeno_Dashboard
+ * @package xeno_dashboard
  */
 
 // If this file is called directly, abort.
@@ -10,19 +10,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
-function create_Xeno_Dashboard_Jira(){
+function create_Xeno_Dashboard_Jira() {
 	new Xeno_Dashboard_Jira();
 }
 add_action( 'init', 'create_Xeno_Dashboard_Jira' );
 
 /**
- * Stablish Jira communication.
+ * Establish Jira communication.
  */
-
 class Xeno_Dashboard_Jira {
 
 	/**
 	 * Holds Jira settions.
+	 *
 	 * @access  private
 	 * @since   1.0.0
 	 */
@@ -30,6 +30,7 @@ class Xeno_Dashboard_Jira {
 
 	/**
 	 * Holds Jira task description.
+	 *
 	 * @access  private
 	 * @since   1.0.0
 	 */
@@ -39,6 +40,7 @@ class Xeno_Dashboard_Jira {
 	 * Constructor
 	 *
 	 * Set class variables.
+	 *
 	 * @param void
 	 * @return void
 	 * @access  public
@@ -46,25 +48,25 @@ class Xeno_Dashboard_Jira {
 	public function __construct() {
 
 		// Jira transition ID for Start Progress, default 4.
-		$transition = xdb_get_settings( $setting = 'j_trans', $defined = 'XDB_JIRA_TRANSITION');
+		$transition = xdb_get_settings( $setting = 'j_trans', $defined = 'XDB_JIRA_TRANSITION' );
 
 		$this->settings = array(
 			'enable' => ! empty( $user ),
-			'progress_transition_id' => empty($transition) ? 4 : $transition,
-			'user' => xdb_get_settings( $setting = 'j_user', $defined = 'XDB_JIRA_USER'),
-			'pwd' => xdb_get_settings( $setting = 'j_pwd', $defined = 'XDB_JIRA_PWD'),
-			'assignee' => xdb_get_settings( $setting = 'j_assign', $defined = 'XDB_JIRA_ASSIGNEE'),
-			'server' => xdb_get_settings( $setting = 'j_server', $defined = 'XDB_JIRA_SERVER'),
-			'project' => xdb_get_settings( $setting = 'j_proj', $defined = 'XDB_JIRA_PROJECT'),
-			'labels' => xdb_get_settings( $setting = 'j_labels', $defined = 'XDB_JIRA_LABELS'),
+			'progress_transition_id' => empty( $transition ) ? 4 : $transition,
+			'user' => xdb_get_settings( $setting = 'j_user', $defined = 'XDB_JIRA_USER' ),
+			'pwd' => xdb_get_settings( $setting = 'j_pwd', $defined = 'XDB_JIRA_PWD' ),
+			'assignee' => xdb_get_settings( $setting = 'j_assign', $defined = 'XDB_JIRA_ASSIGNEE' ),
+			'server' => xdb_get_settings( $setting = 'j_server', $defined = 'XDB_JIRA_SERVER' ),
+			'project' => xdb_get_settings( $setting = 'j_proj', $defined = 'XDB_JIRA_PROJECT' ),
+			'labels' => xdb_get_settings( $setting = 'j_labels', $defined = 'XDB_JIRA_LABELS' ),
 		);
 
-		add_action( 'xdb_rest_notify_jira', array( $this, 'rest_notify_jira') );
+		add_action( 'xdb_rest_notify_jira', array( $this, 'rest_notify_jira' ) );
 
 		// Cron to create Jira.
-	    if( ! wp_next_scheduled( 'xdb_rest_notify_jira' ) ) {
-	        wp_schedule_event( time(), 'twicedaily', 'xdb_rest_notify_jira' );
-	    }
+		if ( ! wp_next_scheduled( 'xdb_rest_notify_jira' ) ) {
+			wp_schedule_event( time(), 'twicedaily', 'xdb_rest_notify_jira' );
+		}
 	}
 
 	/**
@@ -76,7 +78,7 @@ class Xeno_Dashboard_Jira {
 	 */
 	public function rest_notify_jira() {
 
-		$env = xdb_get_settings( $setting = 'r_env', $defined = 'XDB_ENV');
+		$env = xdb_get_settings( $setting = 'r_env', $defined = 'XDB_ENV' );
 
 		// Verify if production.
 		if ( 'prod' != $env ) {
@@ -107,7 +109,7 @@ class Xeno_Dashboard_Jira {
 		// Core.
 		$Xeno_Dashboard_Updates->prepare_core_response( $site_data );
 
-		// Plugins
+		// Plugins.
 		$Xeno_Dashboard_Updates->prepare_plugins_response( $site_data );
 
 		// Themes.
@@ -116,25 +118,24 @@ class Xeno_Dashboard_Jira {
 		$vulnerable = false;
 
 		$this->description = '';
-		foreach($site_data as $data => $d) {
+		foreach ( $site_data as $data => $d ) {
 
-			if ( false !== strpos( strtolower( $d['description'] ), "up to date" ) ) {
-					unset($d);
-				} else {
-					// Mix field with defaults.
-					$field = array(
-						'title' => $d['name'],
-						'value' => $d['description'],
-						'short' => true,
-					);
+			if ( false !== strpos( strtolower( $d['description'] ), 'up to date' ) ) {
+					unset( $d );
+			} else {
+				// Mix field with defaults.
+				$field = array(
+					'title' => $d['name'],
+					'value' => $d['description'],
+					'short' => true,
+				);
 
-					$this->description .= $d['type'] . "\tName: " . $d['name'] . ",\t" . $d['description'] . "\n";
+				$this->description .= $d['type'] . "\tName: " . $d['name'] . ",\t" . $d['description'] . "\n";
 
-					if ( 'warning' == $d['alert_level'] && $vulnerable ) {
-						$vulnerable = true;
-					}
+				if ( 'warning' == $d['alert_level'] && $vulnerable ) {
+					$vulnerable = true;
 				}
-
+			}
 		}
 
 		return $vulnerable;
@@ -153,8 +154,9 @@ class Xeno_Dashboard_Jira {
 				str_replace(
 					array( "\r\n", "\n", "\r", "\t", 'plugin', 'theme', 'core' ),
 					'',
-					$string )
-				),
+					$string
+				)
+			),
 			'rl'
 		);
 	}
@@ -163,7 +165,7 @@ class Xeno_Dashboard_Jira {
 	 * Open Jira task and start progress.
 	 *
 	 * @param   boolean $vulnerable - If the site is vulnerable then the priority
-	 *			will be the highest oneotherwise medium.
+	 *          will be the highest oneotherwise medium.
 	 * @return  string  $response - APi response.
 	 * @access   public
 	 */
@@ -184,7 +186,7 @@ class Xeno_Dashboard_Jira {
 		if ( false !== $xdb_updates_transient ) {
 
 			// If transitien is not refreshed then means it is duplicated and return false.
-			if ( $xdb_updates_transient ==  $this->clean_transiten( $this->description ) ) {
+			if ( $xdb_updates_transient == $this->clean_transiten( $this->description ) ) {
 				return false;
 			}
 		}
@@ -234,7 +236,7 @@ class Xeno_Dashboard_Jira {
 	}
 
 	/**
-	 * cURL function to all Jira rest API.
+	 * The cURL function to all Jira rest API.
 	 * TODO conver to wp.
 	 *
 	 * @param $url string - jira rest api.
@@ -249,8 +251,8 @@ class Xeno_Dashboard_Jira {
 		curl_setopt( $ch, CURLOPT_USERPWD, $this->settings['user'] . ':' . $this->settings['pwd'] );
 		curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, array( 'Content-type: application/json' ) );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, TRUE );
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE ); // for old versions. TODO: verify ssl
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false ); // for old versions. TODO: verify ssl
 		// curl_setopt( $ch, CURLOPT_VERBOSE, 1 );
 		$result = curl_exec( $ch );
 		$ch_error = curl_error( $ch );
@@ -274,7 +276,7 @@ class Xeno_Dashboard_Jira {
  * @return void
  */
 function xdb_run_jira_on_activate() {
-    do_action( 'xdb_rest_notify_jira' );
+	do_action( 'xdb_rest_notify_jira' );
 }
 register_activation_hook( __FILE__, 'xdb_run_jira_on_activate' );
 
@@ -285,6 +287,6 @@ register_activation_hook( __FILE__, 'xdb_run_jira_on_activate' );
  * @return void
  */
 function xdb_run_jira_on_deactivate() {
-    wp_clear_scheduled_hook( 'xdb_rest_notify_jira' );
+	wp_clear_scheduled_hook( 'xdb_rest_notify_jira' );
 }
 register_deactivation_hook( __FILE__, 'xdb_run_jira_on_deactivate' );

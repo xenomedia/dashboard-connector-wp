@@ -33,7 +33,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/secure.php';
 function xdb_get_settings( $setting, $denifed ) {
 	$return = false;
 	if ( function_exists( 'xdb_get_option' ) ) {
-		$return = xdb_get_option( $setting );	
+		$return = xdb_get_option( $setting );
 	}
 
 	if ( defined( $denifed ) ) {
@@ -46,11 +46,15 @@ function xdb_get_settings( $setting, $denifed ) {
  * Enviroment indicator.
  */
 function xdb_env_indicator() {
-	$colors = array( 'dev'=>'#aa3333','test'=>'#ceaf01','prod'=>'rgb(0, 0, 187)' );
-	$env = xdb_get_settings( $setting = 'r_env', $defined = 'XDB_ENV');
+	$colors = array(
+		'dev' => '#aa3333',
+		'test' => '#ceaf01',
+		'prod' => 'rgb(0, 0, 187)',
+	);
+	$env = xdb_get_settings( $setting = 'r_env', $defined = 'XDB_ENV' );
 	?>
 	<style>
-	#wpadminbar{background: <?php echo isset( $colors[$env] ) ? $colors[$env] : 'black' ;?>}
+	#wpadminbar{background: <?php echo isset( $colors[ $env ] ) ? $colors[ $env ] : 'black' ; ?>}
 	</style>
 	<?php
 }
@@ -62,7 +66,7 @@ function sendTestEmail() {
 	$to = 'carolina@xenomedia.com';
 	$subject = 'Xeno vulnerabilities';
 	$body = get_bloginfo( 'url' ) . "\n" . get_bloginfo( 'name' );
-	$headers = array('Content-Type: text/html; charset=UTF-8');
+	$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 
 	$send = wp_mail( $to, $subject, $body, $headers );
 }
