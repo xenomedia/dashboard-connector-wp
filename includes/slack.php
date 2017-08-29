@@ -22,7 +22,7 @@ define( 'SLACK_WH', 'https://hooks.slack.com/services/' );
  *
  * @since 1.0.0
  */
-class Xeno_Dashboard_Slack {
+class Dashboard_Connector_WP_Slack {
 
 	/**
 	 * Holds settings.
@@ -39,7 +39,7 @@ class Xeno_Dashboard_Slack {
 	 * @since   1.0.0
 	 */
 	public function __construct() {
-		
+
 		// Slack Webhook
 		$setting_webhook = xdb_get_settings( $setting = 's_webhook', $defined = 'XDB_SLACK_WEBHOOK');
 
@@ -47,7 +47,7 @@ class Xeno_Dashboard_Slack {
 		$this->settings = array(
 			'enable' => ! empty( $setting_webhook ),
 			'end_point' => SLACK_WH . $setting_webhook,
-			'bot_name' => __('Xeno Dashboard', 'xdb'),
+			'bot_name' => __('Dashboard Connector WP', 'xdb'),
 			'bot_icon' => '',
 			'channels' => xdb_get_settings( $setting = 's_channels', $defined = 'XDB_SLACK_CHANNELS'),
 			'notify' => xdb_get_settings( $setting = 's_notify', $defined = 'XDB_SLACK_NOTIFY'),
@@ -66,7 +66,7 @@ class Xeno_Dashboard_Slack {
 	public function xdb_admin_notice() {
 	    ?>
 	    <div class="notice error my-acf-notice is-dismissible" >
-	        <p><?php _e( 'Xeno dashboard needs to be configurated!', 'xdb' ); ?></p>
+	        <p><?php _e( 'Dashboard Connector WP needs to be configurated!', 'xdb' ); ?></p>
 	    </div>
 	    <?php
 	}
@@ -81,27 +81,27 @@ class Xeno_Dashboard_Slack {
 	 * @access   public
 	 */
 	public function talk( $type = 'all', $updates_only = false ) {
-		// Class Xeno_Dashboard_Updates.
+		// Class Dashboard_Connector_WP_Updates.
 		require_once plugin_dir_path( __FILE__ ) . 'updates.php';
 
 		// Array $data will hold all plugins, theme and core data.
 		$data = array();
 
-		$Xeno_Dashboard_Updates = new Xeno_Dashboard_Updates();
+		$Dashboard_Connector_WP_Updates = new Dashboard_Connector_WP_Updates();
 
 		// Core.
 		if ( empty( $type ) ||  'all' == $type || 'core' == $type ) {
-			$Xeno_Dashboard_Updates->prepare_core_response( $data );
+			$Dashboard_Connector_WP_Updates->prepare_core_response( $data );
 		}
 
 		// Plugins
 		if ( empty( $type ) ||  'all' == $type || 'plugins' == $type ) {
-			$Xeno_Dashboard_Updates->prepare_plugins_response( $data );
+			$Dashboard_Connector_WP_Updates->prepare_plugins_response( $data );
 		}
 
 		// Themes.
 		if ( empty( $type ) ||  'all' == $type || 'themes' == $type ) {
-			$Xeno_Dashboard_Updates->prepare_themes_response( $data );
+			$Dashboard_Connector_WP_Updates->prepare_themes_response( $data );
 		}
 
 		$vulnerable = false;
@@ -116,7 +116,7 @@ class Xeno_Dashboard_Slack {
 				if ( true === $updates_only && false !== strpos( strtolower( $attachment['description'] ), "up to date" ) ) {
 					unset($attachment);
 				} else {
-					
+
 					$field = array(
 						'title' => $attachment['name'],
 						'value' => $attachment['description'],

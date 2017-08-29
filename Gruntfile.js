@@ -30,8 +30,8 @@ module.exports = function( grunt ) {
 			target: {
 				options: {
 					domainPath: '/languages',
-					mainFile: 'xeno-dashboard.php',
-					potFilename: 'xeno-dashboard.pot',
+					mainFile: 'dashboard-connector-wp.php',
+					potFilename: 'dashboard-connector-wp.pot',
 					potHeaders: {
 						poedit: true,
 						'x-poedit-keywordslist': true

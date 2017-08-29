@@ -1,8 +1,8 @@
-<?php 
+<?php
 /**
- * Custom REST API end point for Xeno Dashboard.
+ * Custom REST API end point for Dashboard Connector WP.
  *
- * @package  Xeno_Dashboard
+ * @package  Dashboard_Connector_WP
  *
  * @since   1.0.0
  */
@@ -12,17 +12,17 @@ if ( ! defined( 'ABSPATH' ) ) {
   die;
 }
 
-function create_Xeno_Dasboard_REST_Controller(){
-	new Xeno_Dasboard_REST_Controller();
+function create_Dashboard_Connector_WP_REST_Controller(){
+	new Dashboard_Connector_WP_REST_Controller();
 }
-add_action( 'init', 'create_Xeno_Dasboard_REST_Controller' );
+add_action( 'init', 'create_Dashboard_Connector_WP_REST_Controller' );
 
 /**
  * Class for handling Links in the REST API.
- * 
+ *
  * @since 1.0.0
  */
-class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
+class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 
 	/**
 	 * Holds settings.
@@ -45,7 +45,7 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return void
 	 *
-	 * @access  public 
+	 * @access  public
 	 */
 	public function __construct() {
 		$this->init_settings();
@@ -59,7 +59,7 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return void
 	 *
-	 * @access  public 
+	 * @access  public
 	 */
 	public function init_settings() {
 		$this->settings = array(
@@ -79,23 +79,23 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return void
 	 *
-	 * @access  public 
+	 * @access  public
 	 */
 	public function init_hooks() {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		add_action( 'xdb_rest_notify_dashboard', array( $this, 'rest_notify_dashboard') );
-		
 
-		// Cron to post in Xeno dashboard.
+
+		// Cron to post in Dashboard Connector WP.
 		if( ! wp_next_scheduled( 'xdb_rest_notify_dashboard' ) ) {
 	        wp_schedule_event( time(), 'twicedaily', 'xdb_rest_notify_dashboard' );
 	    }
 
-	    
+
 	}
 
 	/**
-	 * Post xeno dashboard site information.
+	 * Post Dashboard Connector WP site information.
 	 * Only for prod environment.
 	 *
 	 * @param void
@@ -109,7 +109,7 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 		if ( 'prod' != $env ) {
 			return false;
 		}
-		
+
 		$this->post_to_xeno();
 
 		sendTestEmail( $msg = 'Jira for ' . $this->settings['site_id'] ); // TODO: REMOVE AFTER PLUGIN IS TESTED AND ACTIVE.
@@ -122,7 +122,7 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return void
 	 *
-	 * @access  public 
+	 * @access  public
 	 */
 	public function register_routes() {
 
@@ -152,10 +152,10 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return WP_Error or WP_REST_Response
 	 *
-	 * @access  public 	 
+	 * @access  public
 	 */
 	public function get_slack_talk( $request ) {
-		
+
 		$list_types = array(
 			'core',
 			'plugins',
@@ -171,10 +171,10 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 		$all = $request->get_param( 'all' );
 		$all = ! isset( $all ) ? true : false;
 
-		// Class Xeno_Dashboard_Slack.
+		// Class Dashboard_Connector_WP_Slack.
 		require_once plugin_dir_path( __FILE__ ) . 'slack.php';
-		$Xeno_Dashboard_Slack = new Xeno_Dashboard_Slack();
-		$Xeno_Dashboard_Slack->talk( $type, $all );
+		$Dashboard_Connector_WP_Slack = new Dashboard_Connector_WP_Slack();
+		$Dashboard_Connector_WP_Slack->talk( $type, $all );
 
 		$response = array(
 			'response' => __( 'I am slack and I talk', 'xdb' ),
@@ -193,28 +193,28 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return array $data site information.
 	 *
-	 * @access  private 	 
+	 * @access  private
 	 */
 	private function prepare_data() {
 		// Data arrays holds all the theme, plugin and core information.
-		$data = array();		
+		$data = array();
 
-		// Class Xeno_Dashboard_Updates.
+		// Class Dashboard_Connector_WP_Updates.
 		require_once plugin_dir_path( __FILE__ ) . 'updates.php';
 
-		$Xeno_Dashboard_Updates = new Xeno_Dashboard_Updates();
+		$Dashboard_Connector_WP_Updates = new Dashboard_Connector_WP_Updates();
 
 		// Core.
-		$Xeno_Dashboard_Updates->prepare_core_response( $data );
+		$Dashboard_Connector_WP_Updates->prepare_core_response( $data );
 
 		// Plugins
-		$Xeno_Dashboard_Updates->prepare_plugins_response( $data );
+		$Dashboard_Connector_WP_Updates->prepare_plugins_response( $data );
 
 		// Themes.
-		$Xeno_Dashboard_Updates->prepare_themes_response( $data );
+		$Dashboard_Connector_WP_Updates->prepare_themes_response( $data );
 
 		$response = array(
-			'timestamp' => $Xeno_Dashboard_Updates->prepare_date_response( current_time( 'mysql', 1 ) ),
+			'timestamp' => $Dashboard_Connector_WP_Updates->prepare_date_response( current_time( 'mysql', 1 ) ),
 			'client_id' => $this->settings['client_id'],
 			'site_id' => $this->settings['site_id'],
 			'env' => $this->settings['env'],
@@ -232,7 +232,7 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return WP_Error or WP_REST_Response
 	 *
-	 * @access  public 	 
+	 * @access  public
 	 */
 	public function get_site_info( $request ) {
 
@@ -251,7 +251,7 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return WP_Error or bool
 	 *
-	 * @access  public 	 
+	 * @access  public
 	 */
 	public function permissions_check( $request ) {
 
@@ -259,7 +259,7 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 		$recieved_jwt = $request->get_param( 'token' );
 
 		if ( empty( $recieved_jwt ) ) {
-			
+
 			// Empty token.
 			return new WP_Error(
 				'forbidden_context',
@@ -299,7 +299,7 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * cURL function to talk to Xeno Dashboard in Drupal
+	 * cURL function to talk to Dashboard Connector WP in Drupal
 	 * TODO conver to wp.
 	 *
 	 * @param $url string - jira rest api.
@@ -309,7 +309,7 @@ class Xeno_Dasboard_REST_Controller extends WP_REST_Controller {
 	 */
 	public function post_to_xeno() {
 		$data = $this->prepare_data();
-                                                                                
+
 		$ch = curl_init();
 		curl_setopt( $ch, CURLOPT_POST, 1 );
 		curl_setopt( $ch, CURLOPT_URL, $this->settings['url'] );

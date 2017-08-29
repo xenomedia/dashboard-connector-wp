@@ -1,8 +1,8 @@
 <?php
 /**
- * Admin settings for plugin xeno-dashboard
+ * Admin settings for plugin dashboard-connector-wp
  *
- * @package  xeno-dashboard
+ * @package  dashboard-connector-wp
  */
 
 // If this file is called directly, abort.
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-class Xeno_Dashboard_Updates {
+class Dashboard_Connector_WP_Updates {
 
 	/**
 	 * Constructor()

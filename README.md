@@ -1,4 +1,4 @@
-# Xeno Dashboard #
+# Dashboard Connector WP #
 **Contributors:** caromanel  
 Donate link: 
 **Tags:** jira, slack, xeno  
@@ -8,7 +8,7 @@ Donate link:
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
-Xeno Dashboard is a plugin that connects with Jira, Slack and the Xeno Rest API.
+Dashboard Connector WP is a plugin that connects with Jira, Slack and the Xeno Rest API.
 
 ## Description ##
 
@@ -17,16 +17,16 @@ Xeno Dashboard is a plugin that connects with Jira, Slack and the Xeno Rest API.
 	b ) slack-talk : send site site information to Slack
 *   Creates a cron that will be running twice a day to check for updates. 
 	If there are updates available will create a task in Jira and only for production environment.
-*   Sends site information to Xeno Dasboard
+*   Sends site information to Dashboard Connector WP
 *   Creates an enviroment indicator
 
 
 ## Installation ##
 
-1. Upload `xeno-dashboard.php` to the `/wp-content/plugins/` directory
-2. Enter settings in xeno-dashboard admin page or edit wp-config.php file with the following paramethers:
+1. Upload `dashboard-connector-wp` to the `/wp-content/plugins/` directory
+2. Enter settings in dashboard-connector-wp admin page or edit wp-config.php file with the following paramethers:
 
-/* Xeno dashboard settings */
+/* Dashboard Connector WP settings */
 
 // ** SLACK SETTINGS ** //
 
@@ -74,7 +74,7 @@ define( 'XDB_JIRA_PROJECT', 'project' );
 define( 'XDB_JIRA_LABELS', 'labelsseparatedbycomma' );
 
 
-// ** XENO DASHBOARD SETTINGS ** //
+// ** Dashboard Connector WP SETTINGS ** //
 
 // Super secreat key.
 
@@ -96,7 +96,7 @@ define( 'XDB_SITE_ID', 'siteid' );
 
 define( 'XDB_CLIENT_ID', 'clientid' );
 
-// Xeno Dashboard rest url.
+// Dashboard Connector WP rest url.
 
 define( 'XDB_URL', 'xenoresturl' );
 
@@ -104,7 +104,7 @@ define( 'XDB_URL', 'xenoresturl' );
 
 define( 'XDB_ENV', 'devortestorprod' );
 
-/* Xeno dashboard settings ENDS */
+/* Dashboard Connector WP settings ENDS */
 
 
 ## Frequently Asked Questions ##

@@ -1,11 +1,11 @@
 <?php
 /**
- * Admin settings for Xeno Dashboard plugin
+ * Admin settings for Dashboard Connector WP plugin
  *
  * TODO: Add style to admin page
  * hide data in inputs
  *
- * @package  xeno_dashboard
+ * @package  Dashboard_Connector_WP
  *
  * @since   1.0.0
  */
@@ -18,21 +18,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Calls the class only in admin.
  */
-function create_Xeno_Dashboard_Admin () {
+function create_Dashboard_Connector_WP_Admin () {
 	if ( is_admin() ) {
-		new Xeno_Dashboard_Admin;
+		new Dashboard_Connector_WP_Admin;
 	}
 }
-add_action( 'init', 'create_Xeno_Dashboard_Admin' );
+add_action( 'init', 'create_Dashboard_Connector_WP_Admin' );
 
 /**
  * Class that holds settings
  *
- * @package Xeno_Dashboard_Admin
+ * @package Dashboard_Connector_WP_Admin
  *
- * @since   1.0.0 
+ * @since   1.0.0
  */
-class Xeno_Dashboard_Admin {
+class Dashboard_Connector_WP_Admin {
 
 	/**
 	 * Holds settings group.
@@ -48,7 +48,7 @@ class Xeno_Dashboard_Admin {
 	 * @access  private
 	 * @var     string
 	 */
-	private $slug = 'xeno-dashboard';
+	private $slug = 'dashboard-connector-wp';
 
 	/**
 	 * Holds settings id.
@@ -116,7 +116,7 @@ class Xeno_Dashboard_Admin {
 	 * @access  public
 	 */
 	public function xdb_add_admin_menu() {
-		add_options_page( __( 'Xeno Dasboard', 'xdb' ), __( 'Xeno Dasboard', 'xdb' ), $this->capability, $this->slug, array( $this, 'xdb_options_page' ) );
+		add_options_page( __( 'Dashboard Connector WP', 'xdb' ), __( 'Dashboard Connector WP', 'xdb' ), $this->capability, $this->slug, array( $this, 'xdb_options_page' ) );
 	}
 
 	/**
@@ -133,7 +133,7 @@ class Xeno_Dashboard_Admin {
 
 		add_settings_section( 'xdb_options_section', '', '', $this->group );
 
-		add_settings_field( 'xdb_rest', __( 'Xeno dashboard', 'xdb' ), array( $this, 'xdb_rest_render' ), $this->group, 'xdb_options_section'
+		add_settings_field( 'xdb_rest', __( 'Dashboard Connector WP', 'xdb' ), array( $this, 'xdb_rest_render' ), $this->group, 'xdb_options_section'
 		);
 
 		add_settings_field( 'xdb_slack', __( 'Slack', 'xdb' ), array( $this, 'xdb_slack_render' ), $this->group, 'xdb_options_section'
@@ -287,7 +287,7 @@ class Xeno_Dashboard_Admin {
 		);
 
 		foreach ( $list_options as $option => $value) {
-	
+
 			if ( ! empty( $args[$value] ) ) {
 				$input[$value] = sanitize_text_field( $args[$value] );
 			}
@@ -307,7 +307,7 @@ class Xeno_Dashboard_Admin {
 	public function xdb_options_page() {
 		?>
 		<form action='options.php' method='post'>
-			<h2><?php echo __( 'Xeno Dashboard' ,'xdb' ); ?></h2>
+			<h2><?php echo __( 'Dashboard Connector WP' ,'xdb' ); ?></h2>
 			<?php
 			wp_nonce_field( '_xdb_nonce', '_xdb_nonce' );
 			settings_fields( $this->group );
@@ -325,7 +325,7 @@ class Xeno_Dashboard_Admin {
 if ( ! function_exists( 'xdb_get_option' ) ) {
 	function xdb_get_option( $option ) {
 		$options = get_option( 'xdb_options' );
-		
+
 		return empty( $options[$option] ) ? false : $options[$option];
 	}
 }

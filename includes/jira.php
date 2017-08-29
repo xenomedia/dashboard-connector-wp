@@ -1,8 +1,8 @@
 <?php
 /**
- * Custom Jira API end point for Xeno Dashboard.
+ * Custom Jira API end point for Dashboard Connector WP.
  *
- * @package  Xeno_Dashboard
+ * @package  Dashboard_Connector_WP
  */
 
 // If this file is called directly, abort.
@@ -10,16 +10,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
-function create_Xeno_Dashboard_Jira(){
-	new Xeno_Dashboard_Jira();
+function create_Dashboard_Connector_WP_Jira(){
+	new Dashboard_Connector_WP_Jira();
 }
-add_action( 'init', 'create_Xeno_Dashboard_Jira' );
+add_action( 'init', 'create_Dashboard_Connector_WP_Jira' );
 
 /**
  * Stablish Jira communication.
  */
 
-class Xeno_Dashboard_Jira {
+class Dashboard_Connector_WP_Jira {
 
 	/**
 	 * Holds Jira settions.
@@ -97,21 +97,21 @@ class Xeno_Dashboard_Jira {
 	 */
 	private function get_description() {
 
-		// Class Xeno_Dashboard_Updates.
+		// Class Dashboard_Connector_WP_Updates.
 		require_once plugin_dir_path( __FILE__ ) . 'updates.php';
 
 		$site_data = array();
 
-		$Xeno_Dashboard_Updates = new Xeno_Dashboard_Updates();
+		$Dashboard_Connector_WP_Updates = new Dashboard_Connector_WP_Updates();
 
 		// Core.
-		$Xeno_Dashboard_Updates->prepare_core_response( $site_data );
+		$Dashboard_Connector_WP_Updates->prepare_core_response( $site_data );
 
 		// Plugins
-		$Xeno_Dashboard_Updates->prepare_plugins_response( $site_data );
+		$Dashboard_Connector_WP_Updates->prepare_plugins_response( $site_data );
 
 		// Themes.
-		$Xeno_Dashboard_Updates->prepare_themes_response( $site_data );
+		$Dashboard_Connector_WP_Updates->prepare_themes_response( $site_data );
 
 		$vulnerable = false;
 
