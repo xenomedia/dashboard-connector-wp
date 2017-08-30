@@ -302,6 +302,8 @@ class Dashboard_Connector_WP_Updates {
 	 */
 	private function check_with_wpvulndb( $type, $slug = null, $ver) {
 
+		// Will hold any errors.
+		$xdb_errors = new WP_Error();
 		// wpvulndb API urls.
 		$wpvulndb_url = array(
 			'core'    => 'https://wpvulndb.com/api/v2/wordpresses/',
