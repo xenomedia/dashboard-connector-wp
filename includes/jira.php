@@ -84,8 +84,6 @@ class Dashboard_Connector_WP_Jira {
 		}
 
 		$this->open_task();
-
-		sendTestEmail( $msg = 'Jira for ' . $this->settings['site_id'] ); // TODO: REMOVE AFTER PLUGIN IS TESTED AND ACTIVE.
 	}
 
 	/**

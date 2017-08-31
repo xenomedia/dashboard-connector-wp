@@ -112,7 +112,6 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 
 		$this->post_to_xeno();
 
-		sendTestEmail( $msg = 'Jira for ' . $this->settings['site_id'] ); // TODO: REMOVE AFTER PLUGIN IS TESTED AND ACTIVE.
 	}
 
 	/**
