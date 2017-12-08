@@ -5,6 +5,9 @@
  * Contains PHPChecker
  */
 
+
+require_once plugin_dir_path( __FILE__ ) . 'CheckerInterface.php';
+
 /**
  * Checks whether the current PHP version is supported.
  *
@@ -100,9 +103,9 @@ class PHPChecker implements CheckerInterface {
 	 * @return string
 	 *   The translated string.
 	 */
-	protected function t($string, array $args = array(), array $options = array()) {
+	protected function t($string, array $args = array()) {
 		// @codingStandardsIgnoreStart
-		return t($string, $args, $options);
+		return strtr($string, $args);
 		// @codingStandardsIgnoreEnd
 	}
 

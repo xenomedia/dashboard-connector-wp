@@ -209,6 +209,10 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 		$Dashboard_Connector_WP_Updates    = new Dashboard_Connector_WP_Updates();
 		$Dashboard_Connector_WP_PHPChecker = new PHPChecker();
 
+
+		// PHP.
+		$data = array_merge( $data, $Dashboard_Connector_WP_PHPChecker->getChecks() );
+
 		// Core.
 		$Dashboard_Connector_WP_Updates->prepare_core_response( $data );
 
@@ -217,9 +221,6 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 
 		// Themes.
 		$Dashboard_Connector_WP_Updates->prepare_themes_response( $data );
-
-		// PHP.
-		$data = array_merge( $data, $Dashboard_Connector_WP_PHPChecker->getChecks() );
 
 		$response = array(
 			'timestamp' => $Dashboard_Connector_WP_Updates->prepare_date_response( current_time( 'mysql', 1 ) ),
