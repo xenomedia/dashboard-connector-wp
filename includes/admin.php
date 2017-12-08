@@ -18,11 +18,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Calls the class only in admin.
  */
-function create_Dashboard_Connector_WP_Admin () {
+function create_Dashboard_Connector_WP_Admin() {
 	if ( is_admin() ) {
 		new Dashboard_Connector_WP_Admin;
 	}
 }
+
 add_action( 'init', 'create_Dashboard_Connector_WP_Admin' );
 
 /**
@@ -89,8 +90,11 @@ class Dashboard_Connector_WP_Admin {
 		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 	}
 
-	public function activation() {}
-	public function deactivation() {}
+	public function activation() {
+	}
+
+	public function deactivation() {
+	}
 
 	/**
 	 * Loads text domain.
@@ -116,7 +120,10 @@ class Dashboard_Connector_WP_Admin {
 	 * @access  public
 	 */
 	public function xdb_add_admin_menu() {
-		add_options_page( __( 'Dashboard Connector WP', 'xdb' ), __( 'Dashboard Connector WP', 'xdb' ), $this->capability, $this->slug, array( $this, 'xdb_options_page' ) );
+		add_options_page( __( 'Dashboard Connector WP', 'xdb' ), __( 'Dashboard Connector WP', 'xdb' ), $this->capability, $this->slug, array(
+			$this,
+			'xdb_options_page'
+		) );
 	}
 
 	/**
@@ -133,13 +140,22 @@ class Dashboard_Connector_WP_Admin {
 
 		add_settings_section( 'xdb_options_section', '', '', $this->group );
 
-		add_settings_field( 'xdb_rest', __( 'Dashboard Connector WP', 'xdb' ), array( $this, 'xdb_rest_render' ), $this->group, 'xdb_options_section'
+		add_settings_field( 'xdb_rest', __( 'Dashboard Connector WP', 'xdb' ), array(
+			$this,
+			'xdb_rest_render'
+		), $this->group, 'xdb_options_section'
 		);
 
-		add_settings_field( 'xdb_slack', __( 'Slack', 'xdb' ), array( $this, 'xdb_slack_render' ), $this->group, 'xdb_options_section'
+		add_settings_field( 'xdb_slack', __( 'Slack', 'xdb' ), array(
+			$this,
+			'xdb_slack_render'
+		), $this->group, 'xdb_options_section'
 		);
 
-		add_settings_field( 'xdb_jira', __( 'Jira', 'xdb' ), array( $this, 'xdb_jira_render' ), $this->group, 'xdb_options_section'
+		add_settings_field( 'xdb_jira', __( 'Jira', 'xdb' ), array(
+			$this,
+			'xdb_jira_render'
+		), $this->group, 'xdb_options_section'
 		);
 	}
 
@@ -165,12 +181,13 @@ class Dashboard_Connector_WP_Admin {
 			'r_pwd',
 		);
 
-		foreach($setting_options as $list=>$o) {
-			$opt = empty( $options[$o] ) ? '' : $options[$o];
+		foreach ( $setting_options as $list => $o ) {
+			$opt = empty( $options[ $o ] ) ? '' : $options[ $o ];
 			?>
-			<label><?php echo ltrim($o, 'r_'); ?>: </label>
-			<input type="<?php echo ( 'r_env' == $o || 'r_client_id' == $o || 'r_site_id' == $o) ? 'text' : 'password'; ?>" name='xdb_options[<?php echo $o; ?>]' value="<?php echo esc_attr( $opt, null );?>">
-			<br />
+            <label><?php echo ltrim( $o, 'r_' ); ?>: </label>
+            <input type="<?php echo ( 'r_env' == $o || 'r_client_id' == $o || 'r_site_id' == $o ) ? 'text' : 'password'; ?>"
+                   name='xdb_options[<?php echo $o; ?>]' value="<?php echo esc_attr( $opt, null ); ?>">
+            <br/>
 			<?php
 		}
 	}
@@ -197,12 +214,13 @@ class Dashboard_Connector_WP_Admin {
 			'j_labels',
 		);
 
-		foreach($setting_options as $list=>$o) {
-			$opt = empty( $options[$o] ) ? '' : $options[$o];
+		foreach ( $setting_options as $list => $o ) {
+			$opt = empty( $options[ $o ] ) ? '' : $options[ $o ];
 			?>
-			<label><?php echo ltrim($o, 'j_'); ?>: </label>
-			<input type="<?php echo ( 'j_trans' == $o || 'j_labels' == $o || 'j_assign' == $o || 'j_proj' == $o) ? 'text' : 'password'; ?>" name='xdb_options[<?php echo $o; ?>]' value="<?php echo esc_attr( $opt, null );?>">
-			<br />
+            <label><?php echo ltrim( $o, 'j_' ); ?>: </label>
+            <input type="<?php echo ( 'j_trans' == $o || 'j_labels' == $o || 'j_assign' == $o || 'j_proj' == $o ) ? 'text' : 'password'; ?>"
+                   name='xdb_options[<?php echo $o; ?>]' value="<?php echo esc_attr( $opt, null ); ?>">
+            <br/>
 			<?php
 		}
 	}
@@ -226,12 +244,13 @@ class Dashboard_Connector_WP_Admin {
 
 		);
 
-		foreach($setting_options as $list=>$o) {
-			$opt = empty( $options[$o] ) ? '' : $options[$o];
+		foreach ( $setting_options as $list => $o ) {
+			$opt = empty( $options[ $o ] ) ? '' : $options[ $o ];
 			?>
-			<label><?php echo ltrim($o, 's_'); ?>: </label>
-			<input type="<?php echo ( 's_channels' == $o || 's_notify' == $o) ? 'text' : 'password'; ?>" name='xdb_options[<?php echo $o; ?>]' value="<?php echo esc_attr( $opt, null );?>">
-			<br />
+            <label><?php echo ltrim( $o, 's_' ); ?>: </label>
+            <input type="<?php echo ( 's_channels' == $o || 's_notify' == $o ) ? 'text' : 'password'; ?>"
+                   name='xdb_options[<?php echo $o; ?>]' value="<?php echo esc_attr( $opt, null ); ?>">
+            <br/>
 			<?php
 		}
 	}
@@ -261,7 +280,7 @@ class Dashboard_Connector_WP_Admin {
 
 		// Check uset capability.
 		if ( ! current_user_can( $this->capability ) ) {
-			 wp_die( __( 'You do not have sufficient permissions to access this page.', 'xdb' ) );
+			wp_die( __( 'You do not have sufficient permissions to access this page.', 'xdb' ) );
 		}
 
 		$list_options = array(
@@ -286,12 +305,13 @@ class Dashboard_Connector_WP_Admin {
 
 		);
 
-		foreach ( $list_options as $option => $value) {
+		foreach ( $list_options as $option => $value ) {
 
-			if ( ! empty( $args[$value] ) ) {
-				$input[$value] = sanitize_text_field( $args[$value] );
+			if ( ! empty( $args[ $value ] ) ) {
+				$input[ $value ] = sanitize_text_field( $args[ $value ] );
 			}
 		}
+
 		return $input;
 	}
 
@@ -306,15 +326,15 @@ class Dashboard_Connector_WP_Admin {
 	 */
 	public function xdb_options_page() {
 		?>
-		<form action='options.php' method='post'>
-			<h2><?php echo __( 'Dashboard Connector WP' ,'xdb' ); ?></h2>
+        <form action='options.php' method='post'>
+            <h2><?php echo __( 'Dashboard Connector WP', 'xdb' ); ?></h2>
 			<?php
 			wp_nonce_field( '_xdb_nonce', '_xdb_nonce' );
 			settings_fields( $this->group );
 			do_settings_sections( $this->group );
 			submit_button();
 			?>
-		</form>
+        </form>
 		<?php
 	}
 }
@@ -326,6 +346,6 @@ if ( ! function_exists( 'xdb_get_option' ) ) {
 	function xdb_get_option( $option ) {
 		$options = get_option( 'xdb_options' );
 
-		return empty( $options[$option] ) ? false : $options[$option];
+		return empty( $options[ $option ] ) ? false : $options[ $option ];
 	}
 }

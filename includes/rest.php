@@ -9,13 +9,16 @@
 
 // If this file is called directly, abort.
 if ( ! defined( 'ABSPATH' ) ) {
-  die;
+	die;
 }
 
-function create_Dashboard_Connector_WP_REST_Controller(){
+
+function create_Dashboard_Connector_WP_REST_Controller() {
 	new Dashboard_Connector_WP_REST_Controller();
 }
+
 add_action( 'init', 'create_Dashboard_Connector_WP_REST_Controller' );
+
 
 /**
  * Class for handling Links in the REST API.
@@ -30,12 +33,12 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 	protected $settings;
 
 	/**
-	* Holds the namespace for these routes.
-	*
-	* @var string
-	* @access  private
-	* @since   1.0.0
-	*/
+	 * Holds the namespace for these routes.
+	 *
+	 * @var string
+	 * @access  private
+	 * @since   1.0.0
+	 */
 	protected $namespace = 'wp/v2';
 
 	/**
@@ -63,12 +66,12 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 	 */
 	public function init_settings() {
 		$this->settings = array(
-			'client_id' => xdb_get_settings( $setting = 'r_client_id', $defined = 'XDB_CLIENT_ID'),
-			'site_id' => xdb_get_settings( $setting = 'r_site_id', $defined = 'XDB_SITE_ID'),
-			'url' => xdb_get_settings( $setting = 'r_url', $defined = 'XDB_URL'),
-			'env' => xdb_get_settings( $setting = 'r_env', $defined = 'XDB_ENV'),
-			'username' => xdb_get_settings( $setting = 'r_user', $defined = 'XDB_USER'),
-			'pwd' => xdb_get_settings( $setting = 'r_pwd', $defined = 'XDB_PWD'),
+			'client_id' => xdb_get_settings( $setting = 'r_client_id', $defined = 'XDB_CLIENT_ID' ),
+			'site_id'   => xdb_get_settings( $setting = 'r_site_id', $defined = 'XDB_SITE_ID' ),
+			'url'       => xdb_get_settings( $setting = 'r_url', $defined = 'XDB_URL' ),
+			'env'       => xdb_get_settings( $setting = 'r_env', $defined = 'XDB_ENV' ),
+			'username'  => xdb_get_settings( $setting = 'r_user', $defined = 'XDB_USER' ),
+			'pwd'       => xdb_get_settings( $setting = 'r_pwd', $defined = 'XDB_PWD' ),
 		);
 	}
 
@@ -83,13 +86,13 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 	 */
 	public function init_hooks() {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
-		add_action( 'xdb_rest_notify_dashboard', array( $this, 'rest_notify_dashboard') );
+		add_action( 'xdb_rest_notify_dashboard', array( $this, 'rest_notify_dashboard' ) );
 
 
 		// Cron to post in Dashboard Connector WP.
-		if( ! wp_next_scheduled( 'xdb_rest_notify_dashboard' ) ) {
-	        wp_schedule_event( time(), 'twicedaily', 'xdb_rest_notify_dashboard' );
-	    }
+		if ( ! wp_next_scheduled( 'xdb_rest_notify_dashboard' ) ) {
+			wp_schedule_event( time(), 'twicedaily', 'xdb_rest_notify_dashboard' );
+		}
 
 
 	}
@@ -99,11 +102,12 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 	 * Only for prod environment.
 	 *
 	 * @param void
+	 *
 	 * @return void
 	 */
 	public function rest_notify_dashboard() {
 
-		$env = xdb_get_settings( $setting = 'r_env', $defined = 'XDB_ENV');
+		$env = xdb_get_settings( $setting = 'r_env', $defined = 'XDB_ENV' );
 
 		// Verify if production
 		if ( 'prod' != $env ) {
@@ -132,7 +136,7 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 				'callback'            => array( $this, 'get_site_info' ),
 				'permission_callback' => array( $this, 'permissions_check' ),
 			),
-		));
+		) );
 
 		// Register the updates check endpoint.
 		register_rest_route( $this->namespace, '/slack-talk', array(
@@ -141,7 +145,7 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 				'callback'            => array( $this, 'get_slack_talk' ),
 				'permission_callback' => array( $this, 'permissions_check' ),
 			),
-		));
+		) );
 	}
 
 	/**
@@ -164,7 +168,7 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 		// Gets $_GET parameter.
 		// t can be core, plugins or themes, if not then all.
 		$type = $request->get_param( 't' );
-		$type = in_array( $type, $list_types ) ? $type : NULL;
+		$type = in_array( $type, $list_types ) ? $type : null;
 
 		// If all doestn exists will return only the updates.
 		$all = $request->get_param( 'all' );
@@ -200,8 +204,10 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 
 		// Class Dashboard_Connector_WP_Updates.
 		require_once plugin_dir_path( __FILE__ ) . 'updates.php';
+		require_once plugin_dir_path( __FILE__ ) . 'phpChecker.php';
 
-		$Dashboard_Connector_WP_Updates = new Dashboard_Connector_WP_Updates();
+		$Dashboard_Connector_WP_Updates    = new Dashboard_Connector_WP_Updates();
+		$Dashboard_Connector_WP_PHPChecker = new PHPChecker();
 
 		// Core.
 		$Dashboard_Connector_WP_Updates->prepare_core_response( $data );
@@ -212,12 +218,15 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 		// Themes.
 		$Dashboard_Connector_WP_Updates->prepare_themes_response( $data );
 
+		// PHP.
+		$data = array_merge( $data, $Dashboard_Connector_WP_PHPChecker->getChecks() );
+
 		$response = array(
 			'timestamp' => $Dashboard_Connector_WP_Updates->prepare_date_response( current_time( 'mysql', 1 ) ),
 			'client_id' => $this->settings['client_id'],
-			'site_id' => $this->settings['site_id'],
-			'env' => $this->settings['env'],
-			'checks' => $data,
+			'site_id'   => $this->settings['site_id'],
+			'env'       => $this->settings['env'],
+			'checks'    => $data,
 		);
 
 		return $response;
@@ -267,7 +276,7 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 			);
 		}
 
-		if ( function_exists( 'xdb_check_supertoken') ) {
+		if ( function_exists( 'xdb_check_supertoken' ) ) {
 
 			// In case a plus symbol is received in the url.
 			$recieved_jwt = urlencode( $recieved_jwt );
@@ -288,10 +297,10 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 
 			// In case there is not a way to check for the super token.
 			return new WP_Error(
-					'forbidden_context',
-					__( 'Something went terribly wrong.', 'xdb' ),
-					array( 'status' => 503 )
-				);
+				'forbidden_context',
+				__( 'Something went terribly wrong.', 'xdb' ),
+				array( 'status' => 503 )
+			);
 		}
 
 		return true;
@@ -303,6 +312,7 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @param $url string - jira rest api.
 	 * @param $data json - string with fields.
+	 *
 	 * @return $result json - string or boolean.
 	 * @access   public
 	 */
@@ -313,12 +323,12 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 		curl_setopt( $ch, CURLOPT_POST, 1 );
 		curl_setopt( $ch, CURLOPT_URL, $this->settings['url'] );
 		curl_setopt( $ch, CURLOPT_USERPWD, $this->settings['username'] . ":" . $this->settings['pwd'] );
-		curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode($data) );
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $data ) );
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, array( 'Content-type: application/json' ) );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, TRUE );
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE ); // for old versions. TODO: verify ssl
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false ); // for old versions. TODO: verify ssl
 
-		$result = curl_exec( $ch );
+		$result   = curl_exec( $ch );
 		$ch_error = curl_error( $ch );
 		if ( $ch_error ) {
 			//echo sprintf( 'cURL Error: %s', $ch_error );
@@ -334,11 +344,13 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
  * Run cron when plugin is activated crons.
  *
  * @param void
+ *
  * @return void
  */
 function xdb_run_dashboard_on_activate() {
-    do_action( 'xdb_rest_notify_dashboard' );
+	do_action( 'xdb_rest_notify_dashboard' );
 }
+
 register_activation_hook( __FILE__, 'xdb_run_dashboard_on_activate' );
 
 
@@ -346,9 +358,11 @@ register_activation_hook( __FILE__, 'xdb_run_dashboard_on_activate' );
  * De-register crons.
  *
  * @param void
+ *
  * @return void
  */
 function xdb_run_on_deactivate() {
-    wp_clear_scheduled_hook( 'xdb_rest_notify_dashboard' );
+	wp_clear_scheduled_hook( 'xdb_rest_notify_dashboard' );
 }
+
 register_deactivation_hook( __FILE__, 'xdb_run_on_deactivate' );
