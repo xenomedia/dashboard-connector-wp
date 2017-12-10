@@ -219,14 +219,14 @@ class Dashboard_Connector_WP_Jira {
 		$url      = $server . 'rest/api/latest/issue';
 		$response = $this->curl( $url, json_encode( $data ) );
 
-		if ( false !== $response ) {
-			$jira_id = json_decode( $response );
-			if ( isset( $jira_id->key ) ) {
-				$data    = '{"update": {"comment": [{"add": {"body": "Starts progress automatically"}}]},"transition": {"id": "' . $this->settings['progress_transition_id'] . '"}}';
-				$url     = $server . 'rest/api/latest/issue/' . $jira_id->key . '/transitions?expand=transitions.fields';
-				$jira_id = $this->curl( $url, $data );
-			}
-		}
+//		if ( false !== $response ) {
+//			$jira_id = json_decode( $response );
+//			if ( isset( $jira_id->key ) ) {
+//				$data    = '{"update": {"comment": [{"add": {"body": "Starts progress automatically"}}]},"transition": {"id": "' . $this->settings['progress_transition_id'] . '"}}';
+//				$url     = $server . 'rest/api/latest/issue/' . $jira_id->key . '/transitions?expand=transitions.fields';
+//				$jira_id = $this->curl( $url, $data );
+//			}
+//		}
 
 		// Generates new transitent.
 		$transiten = $this->clean_transiten( $this->description );
