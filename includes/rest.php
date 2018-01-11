@@ -88,12 +88,10 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		add_action( 'xdb_rest_notify_dashboard', array( $this, 'rest_notify_dashboard' ) );
 
-
 		// Cron to post in Dashboard Connector WP.
 		if ( ! wp_next_scheduled( 'xdb_rest_notify_dashboard' ) ) {
 			wp_schedule_event( time(), 'twicedaily', 'xdb_rest_notify_dashboard' );
 		}
-
 
 	}
 
@@ -130,22 +128,26 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 	public function register_routes() {
 
 		// Register the updates check endpoint.
-		register_rest_route( $this->namespace, '/site-info', array(
-			array(
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_site_info' ),
-				'permission_callback' => array( $this, 'permissions_check' ),
-			),
-		) );
+		register_rest_route(
+			$this->namespace, '/site-info', array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_site_info' ),
+					'permission_callback' => array( $this, 'permissions_check' ),
+				),
+			)
+		);
 
 		// Register the updates check endpoint.
-		register_rest_route( $this->namespace, '/slack-talk', array(
-			array(
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_slack_talk' ),
-				'permission_callback' => array( $this, 'permissions_check' ),
-			),
-		) );
+		register_rest_route(
+			$this->namespace, '/slack-talk', array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_slack_talk' ),
+					'permission_callback' => array( $this, 'permissions_check' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -208,7 +210,6 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 
 		$Dashboard_Connector_WP_Updates    = new Dashboard_Connector_WP_Updates();
 		$Dashboard_Connector_WP_PHPChecker = new PHPChecker();
-
 
 		// PHP.
 		$data = array_merge( $data, $Dashboard_Connector_WP_PHPChecker->getChecks() );
@@ -293,7 +294,6 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 					array( 'status' => 403 )
 				);
 			}
-
 		} else {
 
 			// In case there is not a way to check for the super token.
@@ -323,7 +323,7 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 		$ch = curl_init();
 		curl_setopt( $ch, CURLOPT_POST, 1 );
 		curl_setopt( $ch, CURLOPT_URL, $this->settings['url'] );
-		curl_setopt( $ch, CURLOPT_USERPWD, $this->settings['username'] . ":" . $this->settings['pwd'] );
+		curl_setopt( $ch, CURLOPT_USERPWD, $this->settings['username'] . ':' . $this->settings['pwd'] );
 		curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $data ) );
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, array( 'Content-type: application/json' ) );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
@@ -332,11 +332,11 @@ class Dashboard_Connector_WP_REST_Controller extends WP_REST_Controller {
 		$result   = curl_exec( $ch );
 		$ch_error = curl_error( $ch );
 		if ( $ch_error ) {
-			//echo sprintf( 'cURL Error: %s', $ch_error );
+			// echo sprintf( 'cURL Error: %s', $ch_error );
 			return false;
 		}
 		curl_close( $ch );
-		//echo "\n" . $result;
+		// echo "\n" . $result;
 	}
 
 }

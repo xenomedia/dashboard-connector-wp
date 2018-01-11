@@ -10,12 +10,12 @@
  */
 interface CheckerInterface {
 
-  /**
-   * Gets the checks.
-   *
-   * @return array
-   *   An array of checks.
-   */
-  public function getChecks();
+	/**
+	 * Gets the checks.
+	 *
+	 * @return array
+	 *   An array of checks.
+	 */
+	public function getChecks();
 }
 

@@ -7,7 +7,7 @@
 
 // If this file is called directly, abort.
 if ( ! defined( 'ABSPATH' ) ) {
-  die;
+	die;
 }
 
 /**
@@ -41,16 +41,16 @@ class Dashboard_Connector_WP_Slack {
 	public function __construct() {
 
 		// Slack Webhook
-		$setting_webhook = xdb_get_settings( $setting = 's_webhook', $defined = 'XDB_SLACK_WEBHOOK');
+		$setting_webhook = xdb_get_settings( $setting = 's_webhook', $defined = 'XDB_SLACK_WEBHOOK' );
 
 		// Slack connections.
 		$this->settings = array(
-			'enable' => ! empty( $setting_webhook ),
+			'enable'    => ! empty( $setting_webhook ),
 			'end_point' => SLACK_WH . $setting_webhook,
-			'bot_name' => __('Dashboard Connector WP', 'xdb'),
-			'bot_icon' => '',
-			'channels' => xdb_get_settings( $setting = 's_channels', $defined = 'XDB_SLACK_CHANNELS'),
-			'notify' => xdb_get_settings( $setting = 's_notify', $defined = 'XDB_SLACK_NOTIFY'),
+			'bot_name'  => __( 'Dashboard Connector WP', 'xdb' ),
+			'bot_icon'  => '',
+			'channels'  => xdb_get_settings( $setting = 's_channels', $defined = 'XDB_SLACK_CHANNELS' ),
+			'notify'    => xdb_get_settings( $setting = 's_notify', $defined = 'XDB_SLACK_NOTIFY' ),
 		);
 	}
 
@@ -64,11 +64,11 @@ class Dashboard_Connector_WP_Slack {
 	 * @access   public
 	 */
 	public function xdb_admin_notice() {
-	    ?>
-	    <div class="notice error my-acf-notice is-dismissible" >
-	        <p><?php _e( 'Dashboard Connector WP needs to be configurated!', 'xdb' ); ?></p>
-	    </div>
-	    <?php
+		?>
+		<div class="notice error my-acf-notice is-dismissible" >
+			<p><?php _e( 'Dashboard Connector WP needs to be configurated!', 'xdb' ); ?></p>
+		</div>
+		<?php
 	}
 
 	/**
@@ -90,31 +90,30 @@ class Dashboard_Connector_WP_Slack {
 		$Dashboard_Connector_WP_Updates = new Dashboard_Connector_WP_Updates();
 
 		// Core.
-		if ( empty( $type ) ||  'all' == $type || 'core' == $type ) {
+		if ( empty( $type ) || 'all' == $type || 'core' == $type ) {
 			$Dashboard_Connector_WP_Updates->prepare_core_response( $data );
 		}
 
 		// Plugins
-		if ( empty( $type ) ||  'all' == $type || 'plugins' == $type ) {
+		if ( empty( $type ) || 'all' == $type || 'plugins' == $type ) {
 			$Dashboard_Connector_WP_Updates->prepare_plugins_response( $data );
 		}
 
 		// Themes.
-		if ( empty( $type ) ||  'all' == $type || 'themes' == $type ) {
+		if ( empty( $type ) || 'all' == $type || 'themes' == $type ) {
 			$Dashboard_Connector_WP_Updates->prepare_themes_response( $data );
 		}
 
 		$vulnerable = false;
 		// Build fields.
-
 		$the_fields = array();
 
 		if ( ! empty( $data ) ) {
 
 			// Setup each attachment.
 			foreach ( $data as $attachments => $attachment ) {
-				if ( true === $updates_only && false !== strpos( strtolower( $attachment['description'] ), "up to date" ) ) {
-					unset($attachment);
+				if ( true === $updates_only && false !== strpos( strtolower( $attachment['description'] ), 'up to date' ) ) {
+					unset( $attachment );
 				} else {
 
 					$field = array(
@@ -154,16 +153,16 @@ class Dashboard_Connector_WP_Slack {
 			return false;
 		}
 
-		$webhook_url = $this->settings['end_point'] ;
+		$webhook_url = $this->settings['end_point'];
 
 		// Set defaults.
 		$payload = array(
-			'channel'       => 'jenkins-ci',
-			'username'      => get_bloginfo( 'name' ),
-			'text'          => sprintf( '*<%1$s|%2$s>*' . "\n" . '%3$s', get_bloginfo( 'url' ), get_bloginfo( 'name' ), 'Xeno vulnerabilities tests' ),
-			'icon_emoji'	=> ( $vulnerable ) ? ':fire': ':mega:',
-			'icon_url'		=> trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) ) . 'assets/images/xeno.png',
-			'attachments'   => array(),
+			'channel'     => 'jenkins-ci',
+			'username'    => get_bloginfo( 'name' ),
+			'text'        => sprintf( '*<%1$s|%2$s>*' . "\n" . '%3$s', get_bloginfo( 'url' ), get_bloginfo( 'name' ), 'Xeno vulnerabilities tests' ),
+			'icon_emoji'  => ( $vulnerable ) ? ':fire' : ':mega:',
+			'icon_url'    => trailingslashit( plugin_dir_url( dirname( __FILE__ ) ) ) . 'assets/images/xeno.png',
+			'attachments' => array(),
 		);
 
 		// Set field defaults.
@@ -174,8 +173,8 @@ class Dashboard_Connector_WP_Slack {
 		);
 
 		$payload['attachments'][] = array(
-			'color'         => ( $vulnerable ) ? '#d52121': '#21759b', // Default color.
-			'fields'        => $the_fields,
+			'color'  => ( $vulnerable ) ? '#d52121' : '#21759b', // Default color.
+			'fields' => $the_fields,
 		);
 
 		// Channels
@@ -201,13 +200,15 @@ class Dashboard_Connector_WP_Slack {
 			$payload['channel'] = $channel;
 
 			// Send to Slack.
-			$slack_response = wp_remote_post( $webhook_url, array(
-				'sslverify' => false, // for old versions.
-				'body'      => json_encode( $payload ),
-				'headers'   => array(
-					'Content-Type' => 'application/json',
-				),
-			));
+			$slack_response = wp_remote_post(
+				$webhook_url, array(
+					'sslverify' => false, // for old versions.
+					'body'      => json_encode( $payload ),
+					'headers'   => array(
+						'Content-Type' => 'application/json',
+					),
+				)
+			);
 
 			// Handle errors.
 			if ( is_wp_error( $slack_response ) ) {
@@ -220,7 +221,7 @@ class Dashboard_Connector_WP_Slack {
 				&& '200' != $slack_response['response']['code'] ) {
 
 				// Set an error.
-				$xdb_errors->add( 'xdb_slack_api_error',  __( 'Error: The payload did not send to Slack', 'xdb' ) );
+				$xdb_errors->add( 'xdb_slack_api_error', __( 'Error: The payload did not send to Slack', 'xdb' ) );
 
 			}
 		}

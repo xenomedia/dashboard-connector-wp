@@ -48,7 +48,7 @@ function xdb_get_supertoken() {
 		wp_json_encode(
 			array(
 				'score' => '12',
-				'name' => 'Crille',
+				'name'  => 'Crille',
 			)
 		)
 	);

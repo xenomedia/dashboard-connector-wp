@@ -45,11 +45,11 @@ class Dashboard_Connector_WP_Updates {
 
 		// WordPress update check.
 		if ( ! function_exists( 'get_core_updates' ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/update.php' );
+			require_once ABSPATH . 'wp-admin/includes/update.php';
 		}
 
 		// Some plugins maybe hidding core version, so let's check it in version.php.
-		require_once( ABSPATH . WPINC . '/version.php' );
+		require_once ABSPATH . WPINC . '/version.php';
 
 		global $wp_version; // Gets current version of wp core.
 
@@ -334,8 +334,8 @@ class Dashboard_Connector_WP_Updates {
 			$xdb_errors->add( 'xdb_slack_api_error', $response->get_error_message() );
 
 		} elseif ( ! empty( $response['response'] )
-		           && ! empty( $response['response']['code'] )
-		           && '200' != $response['response']['code'] ) {
+				   && ! empty( $response['response']['code'] )
+				   && '200' != $response['response']['code'] ) {
 
 			// Set an error.
 			$xdb_errors->add( 'xdb_slack_api_error', __( 'Error: Couldn\'t connect to wpvulndb', 'xdb' ) );
@@ -354,7 +354,7 @@ class Dashboard_Connector_WP_Updates {
 				 * with all the versions reported as vulnerables
 				 * return true if the current version is not greater than all the
 				 * versions reported as fixed.
-				 **/
+				 */
 				$cur_ver = filter_var( $ver, FILTER_SANITIZE_NUMBER_INT );
 				foreach ( $json as $vul => $key ) {
 					$count = count( $key->vulnerabilities );
