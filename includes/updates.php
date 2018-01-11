@@ -1,8 +1,8 @@
 <?php
 /**
- * Admin settings for  for Xeno Dashboard.
+ * Admin settings for plugin dashboard-connector-wp
  *
- * @package xeno_dashboard
+ * @package  dashboard-connector-wp
  */
 
 // If this file is called directly, abort.
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-class Xeno_Dashboard_Updates {
+class Dashboard_Connector_WP_Updates {
 
 	/**
 	 * Constructor()
@@ -54,11 +54,7 @@ class Xeno_Dashboard_Updates {
 		global $wp_version; // Gets current version of wp core.
 
 		// See if there's an update before moving forward.
-		$the_core = get_core_updates(
-			array(
-				'dismissed' => false,
-			)
-		);
+		$the_core = get_core_updates( array( 'dismissed' => false ) );
 
 		// Removes first element.
 		$the_core = array_shift( $the_core );
@@ -68,8 +64,8 @@ class Xeno_Dashboard_Updates {
 
 		// Default info.
 		$default = array(
-			'type'  => __( 'Core', 'xdb' ),
-			'name'  => __( 'WP', 'xdb' ),
+			'type' => __( 'Core', 'xdb' ),
+			'name' => __( 'WP', 'xdb' ),
 		);
 
 		if ( $wp_version != $the_core_version ) {
@@ -120,7 +116,7 @@ class Xeno_Dashboard_Updates {
 		if ( isset( $the_plugins->response ) && is_array( $the_plugins->response ) ) {
 			foreach ( $the_plugins->response as $p => $h ) {
 				$updates_a[ $h->slug ] = array(
-					'ver' => $h->new_version,
+					'ver'     => $h->new_version,
 					'warning' => ( isset( $h->upgrade_notice ) ) ? $h->upgrade_notice : '',
 				);
 			}
@@ -137,8 +133,8 @@ class Xeno_Dashboard_Updates {
 			$the_plugin_version = ! empty( $plugin_data['Version'] ) ? $plugin_data['Version'] : false;
 
 			$default = array(
-				'type'      => 'Plugin',
-				'name'      => $the_plugin_title,
+				'type'        => 'Plugin',
+				'name'        => $the_plugin_title,
 				'description' => sprintf( __( 'Up to date %1$s', 'xdb' ), $the_plugin_version ),
 				'alert_level' => __( 'notice', 'xdb' ),
 			);
@@ -193,10 +189,10 @@ class Xeno_Dashboard_Updates {
 
 		if ( isset( $update_themes->response ) && is_array( $update_themes->response ) ) {
 			foreach ( $update_themes->response as $p => $h ) {
-				$theme_data = wp_get_theme( $p );
-				$the_theme_name = $theme_data['Name'];
+				$theme_data                   = wp_get_theme( $p );
+				$the_theme_name               = $theme_data['Name'];
 				$updates_a[ $the_theme_name ] = array(
-					'ver' => $h['new_version'],
+					'ver'  => $h['new_version'],
 					'slug' => $p,
 				);
 			}
@@ -204,10 +200,10 @@ class Xeno_Dashboard_Updates {
 
 		foreach ( $all_themes as $theme ) {
 			$the_theme_version = $theme->get( 'Version' );
-			$the_theme_name = $theme->get( 'Name' );
-			$default = array(
-				'type'      => 'Theme',
-				'name'      => $the_theme_name,
+			$the_theme_name    = $theme->get( 'Name' );
+			$default           = array(
+				'type'        => 'Theme',
+				'name'        => $the_theme_name,
 				'description' => sprintf( __( 'Up to date %1$s', 'xdb' ), $the_theme_version ),
 				'alert_level' => __( 'notice', 'xdb' ),
 			);
@@ -277,7 +273,7 @@ class Xeno_Dashboard_Updates {
 		);
 
 		$string = strtolower( $description );
-		$found = false;
+		$found  = false;
 
 		// Loops in array of words to see if they exists in the plugin update description.
 		foreach ( $array as $words => $word ) {
@@ -306,11 +302,13 @@ class Xeno_Dashboard_Updates {
 	 */
 	private function check_with_wpvulndb( $type, $slug = null, $ver ) {
 
+		// Will hold any errors.
+		$xdb_errors = new WP_Error();
 		// wpvulndb API urls.
 		$wpvulndb_url = array(
-			'core'    => 'https://wpvulndb.com/api/v2/wordpresses/',
+			'core'   => 'https://wpvulndb.com/api/v2/wordpresses/',
 			'plugin' => 'https://wpvulndb.com/api/v2/plugins/',
-			'theme' => 'https://wpvulndb.com/api/v2/themes/',
+			'theme'  => 'https://wpvulndb.com/api/v2/themes/',
 		);
 
 		if ( 'plugin' == $type || 'theme' == $type ) {
@@ -324,9 +322,7 @@ class Xeno_Dashboard_Updates {
 		// Remote get.
 		$response = wp_remote_get(
 			$url,
-			array(
-				'sslverify' => false,
-			)
+			array( 'sslverify' => false )
 		); // ssl verify false for old versions.
 
 		$vulnerable = false;
@@ -338,11 +334,11 @@ class Xeno_Dashboard_Updates {
 			$xdb_errors->add( 'xdb_slack_api_error', $response->get_error_message() );
 
 		} elseif ( ! empty( $response['response'] )
-			&& ! empty( $response['response']['code'] )
-			&& '200' != $response['response']['code'] ) {
+		           && ! empty( $response['response']['code'] )
+		           && '200' != $response['response']['code'] ) {
 
 			// Set an error.
-			$xdb_errors->add( 'xdb_slack_api_error',  __( 'Error: Couldn\'t connect to wpvulndb', 'xdb' ) );
+			$xdb_errors->add( 'xdb_slack_api_error', __( 'Error: Couldn\'t connect to wpvulndb', 'xdb' ) );
 
 			// If the response is an array, it's coming from wp_remote_get.
 			if ( is_array( $response ) && isset( $response['body'] ) ) {
@@ -358,24 +354,24 @@ class Xeno_Dashboard_Updates {
 				 * with all the versions reported as vulnerables
 				 * return true if the current version is not greater than all the
 				 * versions reported as fixed.
-				 */
+				 **/
 				$cur_ver = filter_var( $ver, FILTER_SANITIZE_NUMBER_INT );
 				foreach ( $json as $vul => $key ) {
 					$count = count( $key->vulnerabilities );
-					$i = 1;
+					$i     = 1;
 					foreach ( $key->vulnerabilities as $v ) {
 						$fixed_in = filter_var( $v->fixed_in, FILTER_SANITIZE_NUMBER_INT );
 
 						if ( $fixed_in <= $cur_ver ) {
-							$i++;
+							$i ++;
 						}
 					}
 
 					$vulnerable = ( $i < $count );
 
 					if ( true == $vulnerable ) {
-						break; // if vulnerable then breaks.
-					}
+						break;
+					} // if vulnerable then breaks;
 				}
 			} // Good reponse.
 

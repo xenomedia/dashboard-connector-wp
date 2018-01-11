@@ -1,62 +1,54 @@
-/**
- * Gruntfile.js for Xeno Dashboard plugin.
- *
- * @package xeno_dashboard
- */
-
 module.exports = function( grunt ) {
 
 	'use strict';
 	var banner = '/**\n * <%= pkg.homepage %>\n * Copyright (c) <%= grunt.template.today("yyyy") %>\n * This file is generated automatically. Do not edit.\n */\n';
-	// Project configuration.
-	grunt.initConfig(
-		{
+	// Project configuration
+	grunt.initConfig( {
 
-			pkg: grunt.file.readJSON( 'package.json' ),
+		pkg: grunt.file.readJSON( 'package.json' ),
 
-			addtextdomain: {
+		addtextdomain: {
+			options: {
+				textdomain: 'xdb',
+			},
+			target: {
+				files: {
+					src: [ '*.php', '**/*.php', '!node_modules/**', '!php-tests/**', '!bin/**' ]
+				}
+			}
+		},
+
+		wp_readme_to_markdown: {
+			your_target: {
+				files: {
+					'README.md': 'readme.txt'
+				}
+			},
+		},
+
+		makepot: {
+			target: {
 				options: {
-					textdomain: 'xdb',
-				},
-				target: {
-					files: {
-						src: [ '*.php', '**/*.php', '!node_modules/**', '!php-tests/**', '!bin/**' ]
-					}
+					domainPath: '/languages',
+					mainFile: 'dashboard-connector-wp.php',
+					potFilename: 'dashboard-connector-wp.pot',
+					potHeaders: {
+						poedit: true,
+						'x-poedit-keywordslist': true
+					},
+					type: 'wp-plugin',
+					updateTimestamp: true
 				}
-			},
-
-			wp_readme_to_markdown: {
-				your_target: {
-					files: {
-						'README.md': 'readme.txt'
-					}
-				},
-			},
-
-			makepot: {
-				target: {
-					options: {
-						domainPath: '/languages',
-						mainFile: 'xeno-dashboard.php',
-						potFilename: 'xeno-dashboard.pot',
-						potHeaders: {
-							poedit: true,
-							'x-poedit-keywordslist': true
-						},
-						type: 'wp-plugin',
-						updateTimestamp: true
-					}
-				}
-			},
-		}
-	);
+			}
+		},
+	} );
 
 	grunt.loadNpmTasks( 'grunt-wp-i18n' );
 	grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
 	grunt.registerTask( 'i18n', ['addtextdomain', 'makepot'] );
 	grunt.registerTask( 'readme', ['wp_readme_to_markdown'] );
 
-	grunt.registerTask( 'default', ['makepot','wp_readme_to_markdown','addtextdomain'] );
+	grunt.registerTask('default', ['makepot','wp_readme_to_markdown','addtextdomain']);
 	grunt.util.linefeed = '\n';
 
 };

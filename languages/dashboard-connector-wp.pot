@@ -1,9 +1,9 @@
-# Copyright (C) 2017 Xeno Staff <carolina@xenomedia.com>
-# This file is distributed under the same license as the Xeno Dashboard package.
+# Copyright (C) 2017 Xeno Staff <wordpress@xenomedia.com>
+# This file is distributed under the same license as the Dashboard Connector WP package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Xeno Dashboard 0.1.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/xeno-dashboard\n"
+"Project-Id-Version: Dashboard Connector WP 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/dashboard-connector-wp\n"
 "POT-Creation-Date: 2017-07-14 03:55:23+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -25,11 +25,11 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 
 #: includes/admin.php:119
-msgid "Xeno Dasboard"
+msgid "Dashboard Connector WP"
 msgstr ""
 
 #: includes/admin.php:136
-msgid "Xeno dashboard"
+msgid "Dashboard Connector WP"
 msgstr ""
 
 #: includes/admin.php:139
@@ -49,7 +49,7 @@ msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
 #. Description of the plugin/theme
-msgid "Xeno Dashboard"
+msgid "Dashboard Connector WP"
 msgstr ""
 
 #: includes/jira.php:261
@@ -69,7 +69,7 @@ msgid "Something went terribly wrong."
 msgstr ""
 
 #: includes/slack.php:69
-msgid "Xeno dashboard needs to be configurated!"
+msgid "Dashboard Connector WP needs to be configurated!"
 msgstr ""
 
 #: includes/slack.php:223
@@ -113,11 +113,11 @@ msgid "Error: Couldn't connect to wpvulndb"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
-msgid "xeno-dashboard"
+msgid "dashboard-connector-wp"
 msgstr ""
 
 #. Author of the plugin/theme
-msgid "Xeno Staff <carolina@xenomedia.com>"
+msgid "Xeno Staff <wordpress@xenomedia.com>"
 msgstr ""
 
 #. Author URI of the plugin/theme

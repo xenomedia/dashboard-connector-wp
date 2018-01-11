@@ -1,6 +1,5 @@
-
 {
-  "name": "xeno-dashboard",
+  "name": "dashboard-connector-wp",
   "version": "0.1.0",
   "main": "Gruntfile.js",
   "author": "caromanel",
