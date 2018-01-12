@@ -1,5 +1,11 @@
 <?php
 /**
+ * Creates and checks for tokens.
+ *
+ * @package xeno-dashboard
+ */
+
+/**
  * Creates Json Web Token
  *
  * @param void
@@ -21,39 +27,39 @@ function xdb_get_supertoken() {
 			$supersecret = XDB_REST_SECRET;
 		}
 	}
-	
+
 	// If there is secret then rest won't work.
-	if ( empty( $supersecret ) ){
+	if ( empty( $supersecret ) ) {
 		 return false;
 	}
 
 	// JWT header.
-	$encoded_header = base64_encode( 
-		wp_json_encode( 
+	$encoded_header = base64_encode(
+		wp_json_encode(
 			array(
-				'alg' => 'HS256', 
+				'alg' => 'HS256',
 				'typ' => 'JWT',
 			)
-		) 
+		)
 	);
 
 	// JWT payload.
-	$encoded_payload = base64_encode( 
-		wp_json_encode( 
+	$encoded_payload = base64_encode(
+		wp_json_encode(
 			array(
-				'score' => '12', 
-				'name' => 'Crille',
-			) 
-		) 
+				'score' => '12',
+				'name'  => 'Crille',
+			)
+		)
 	);
 
 	// JWT combined.
 	$header_and_payload_combined = $encoded_header . '.' . $encoded_payload;
 
 	// JWT Signature.
-	$signature = base64_encode( 
+	$signature = base64_encode(
 		hash_hmac(
-		'sha256',
+			'sha256',
 			$header_and_payload_combined,
 			$supersecret,
 			true
@@ -71,15 +77,15 @@ function xdb_get_supertoken() {
  *
  * @return bool true if $signature is equal $recieved_signature otherwise false.
  *
- * @since 1.0.0 
+ * @since 1.0.0
  */
 function xdb_check_supertoken( $recieved_jwt ) {
 
 	$supersecret = '';
-	
+
 	$jwt_values = explode( '.', $recieved_jwt );
 
-	if ( count( $jwt_values) != 3 ) {
+	if ( count( $jwt_values ) != 3 ) {
 		return false;
 	}
 
@@ -92,26 +98,28 @@ function xdb_check_supertoken( $recieved_jwt ) {
 		}
 	}
 
-	// JWT Payload
+	// JWT Payload.
 	$recieved_header_and_payload = $jwt_values[0] . '.' . $jwt_values[1];
 
 	// JWT Signature received.
 	$recieved_signature = $jwt_values[2];
 
 	// JWT Signature.
-	$signature = base64_encode( 
-		hash_hmac( 
-			'sha256', 
-			$recieved_header_and_payload, 
-			$supersecret, 
-			true 
+	$signature = base64_encode(
+		hash_hmac(
+			'sha256',
+			$recieved_header_and_payload,
+			$supersecret,
+			true
 		)
 	);
 
 	return ( $signature == $recieved_signature );
 }
 
-// TODO for admin settings page, hides strings in input.
+/**
+ * TODO for admin settings page, hides strings in input.
+ */
 function xdb_get_starred( $str ) {
 	return substr( $str, 0, 1 ) . str_repeat( '*', $len = strlen( $str ) - 2 ) . substr( $str, $len - 1, 1 );
 }

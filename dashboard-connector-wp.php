@@ -46,11 +46,15 @@ function xdb_get_settings( $setting, $denifed ) {
  * Enviroment indicator.
  */
 function xdb_env_indicator() {
-	$colors = array( 'dev'=>'#aa3333','test'=>'#ceaf01','prod'=>'rgb(0, 0, 187)' );
-	$env = xdb_get_settings( $setting = 'r_env', $defined = 'XDB_ENV');
+	$colors = array(
+		'dev'  => '#aa3333',
+		'test' => '#ceaf01',
+		'prod' => 'rgb(0, 0, 187)',
+	);
+	$env    = xdb_get_settings( $setting = 'r_env', $defined = 'XDB_ENV' );
 	?>
 	<style>
-	#wpadminbar{background: <?php echo isset( $colors[$env] ) ? $colors[$env] : 'black' ;?>}
+	#wpadminbar{background: <?php echo isset( $colors[ $env ] ) ? $colors[ $env ] : 'black'; ?>}
 	</style>
 	<?php
 }
