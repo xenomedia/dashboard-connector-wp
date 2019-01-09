@@ -4,4 +4,5 @@
     "type": "wordpress-plugin",
     "keywords": [ "wordpress", "plugin", "media" ],
     "homepage": "http://xenomedia.com",
+    "version": "1"
 }
