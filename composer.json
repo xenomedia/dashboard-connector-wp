@@ -1,0 +1,8 @@
+{
+    "name": "xenomedia/dashboard-connector-wp",
+    "description": "Dashboard Connect for Wordpress sites and Xeno Media.",
+    "type": "wordpress-plugin",
+    "keywords": [ "wordpress", "plugin", "media" ],
+    "homepage": "http://xenomedia.com",
+    "license": "Copyright (c) 2008-2020, Xenomedia",
+}
